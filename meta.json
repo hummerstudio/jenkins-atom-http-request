@@ -1,0 +1,8 @@
+{
+  "name": "HTTP request",
+  "summary": "把 http_request 插件变成一个原子：调接口、带凭据、把响应体/状态码交给下游。",
+  "author": "hummerstudio",
+  "license": "MIT",
+  "tags": ["http", "integration", "official-port"],
+  "homepage": "https://github.com/hummerstudio/jenkins-atom-http-request"
+}

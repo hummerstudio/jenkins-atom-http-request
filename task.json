@@ -1,0 +1,83 @@
+{
+  "atomCode": "http-request",
+  "name": "HTTP request",
+  "version": "1.0.0",
+  "description": "Calls an HTTP endpoint from the build and exposes status, headers and body to later steps.",
+  "execution": {
+    "packagePath": "http-request.jar",
+    "language": "java",
+    "target": "$atom_java_path -cp http-request.jar HttpRequestAtom"
+  },
+  "input": {
+    "url": {
+      "label": "URL（支持 ${BUILD_NUMBER} 等环境变量）",
+      "type": "vuex-input",
+      "required": true
+    },
+    "method": {
+      "label": "方法",
+      "type": "selector",
+      "default": "GET",
+      "options": ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"]
+    },
+    "headers": {
+      "label": "请求头（每行一个 Name: value）",
+      "type": "textarea",
+      "default": ""
+    },
+    "body": {
+      "label": "请求体（留空则不发送）",
+      "type": "textarea",
+      "default": ""
+    },
+    "expectStatus": {
+      "label": "期望状态码（如 200 或 2xx，留空＝2xx）",
+      "type": "vuex-input",
+      "default": "2xx"
+    },
+    "saveTo": {
+      "label": "把响应体保存到（workspace 相对路径，可留空）",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "printBody": {
+      "label": "把响应体打到构建日志",
+      "type": "checkbox",
+      "default": "true"
+    },
+    "timeoutSeconds": {
+      "label": "超时（秒）",
+      "type": "vuex-input-number",
+      "default": "60"
+    },
+    "token": {
+      "label": "Bearer token（Jenkins 凭据 id）",
+      "type": "vuex-input",
+      "isSensitive": true,
+      "default": ""
+    },
+    "user": {
+      "label": "Basic 用户名",
+      "type": "vuex-input",
+      "default": ""
+    },
+    "password": {
+      "label": "Basic 密码（Jenkins 凭据 id）",
+      "type": "vuex-input",
+      "isSensitive": true,
+      "default": ""
+    }
+  },
+  "output": {
+    "status": { "type": "string", "description": "HTTP 状态码" },
+    "body": { "type": "string", "description": "响应体（最多 256 KiB，完整内容见 savedFile）" },
+    "headers": { "type": "string", "description": "响应头，每行一个" },
+    "durationMs": { "type": "string", "description": "耗时（毫秒）" },
+    "savedFile": { "type": "artifact", "description": "保存到 workspace 的响应体" }
+  },
+  "x-jenkins": {
+    "protocol": "jenkins-1",
+    "secrets": { "token": "", "password": "" },
+    "requires": { "runner": ">=0.3.0" }
+  }
+}
