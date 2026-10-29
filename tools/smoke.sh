@@ -4,6 +4,8 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
+export BUILD_NUMBER=7 JOB_NAME="$(basename "$PWD")-job"
+
 ./build.sh >/dev/null
 jar="$(cd dist/http-request && pwd)/http-request.jar"
 java_bin="${JAVA_HOME:+$JAVA_HOME/bin/}java"
@@ -23,10 +25,23 @@ done
 
 run() { # run <dir> --  reads input.json from <dir>
   local dir="$1"
+  python3 - "$dir/input.json" "$dir" <<'JSONFIX'
+import json, os, sys
+path, workspace = sys.argv[1], sys.argv[2]
+given = {}
+if os.path.exists(path) and os.path.getsize(path):
+    given = json.load(open(path))
+# the runner writes its environment into input.json first, then the job's inputs on top
+data = dict(os.environ)
+data.update(given)
+data.setdefault("atom_workspace", workspace)
+json.dump(data, open(path, "w"))
+JSONFIX
   ( cd "$dir" && atom_data_dir="$dir" atom_data_input=input.json atom_data_output=output.json \
       atom_workspace="$dir" BUILD_NUMBER=7 \
-      "$java_bin" -cp "$jar" HttpRequestAtom )
+      "$java_bin" -cp "$jar" com.jenkinschina.atom.sdk.AtomRunner )
 }
+
 
 fail() { echo "smoke failed: $*" >&2; exit 1; }
 
