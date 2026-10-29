@@ -1,7 +1,7 @@
 {
   "atomCode": "http-request",
   "name": "HTTP request",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Calls an HTTP endpoint from the build and exposes status, headers and body to later steps.",
   "execution": {
     "packagePath": "http-request.jar",
