@@ -19,12 +19,14 @@ It is a step, not a plugin: no UI, no job configuration, no core contract. A pip
 `runAtom(atom: 'http-request', version: '1.0.0', inputs: [url: '...'])`, it appears in the atom center with a form,
 and there is nothing left for a Jenkins plugin to own.
 
-## Build and smoke test
+## Build and test
 
 ```bash
-./build.sh             # → dist/http-request/{http-request.jar,task.json}
-./tools/smoke.sh       # starts a local HTTP server: 200 + saved body, 404 failure, unreachable host
+mvn verify             # → dist/http-request/{http-request.jar,task.json}
 ```
+
+The integration test starts a real HTTP server on an ephemeral port: 200 + saved body, a 404 the caller did not ask
+for, and a host that refuses the connection.
 
 ## Publish
 
