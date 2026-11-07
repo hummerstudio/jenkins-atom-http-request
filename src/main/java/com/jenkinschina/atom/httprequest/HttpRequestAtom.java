@@ -79,6 +79,9 @@ public class HttpRequestAtom implements AtomTask {
                     .followRedirects(HttpClient.Redirect.NORMAL)
                     .build()
                     .send(builder.build(), HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return AtomResult.error(ErrorType.THIRD_PART, 40003, method + " " + url + " failed: " + e);
         } catch (Exception e) {
             return AtomResult.error(ErrorType.THIRD_PART, 40003, method + " " + url + " failed: " + e);
         }
